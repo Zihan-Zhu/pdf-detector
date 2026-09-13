@@ -41,6 +41,14 @@ This release supports **Claude Code with local command/file access**. It is not 
 
 Terminal and each AI host can require separate permissions. Sandboxed command execution may need the host's approval to access macOS automation. PDF read permission is separate from detection. The plugin never changes permissions or uploads files itself; the host processes document text according to its normal configuration.
 
+### No permission popup / sandbox errors
+
+A failed command does not necessarily mean macOS denied access. Error `-10827` means System Events could not be reached; in our live check, the same detector succeeded through host-approved execution outside the command sandbox. The skill now requests one such retry when appropriate, without disabling sandboxing globally. A successful retry needs no macOS settings change.
+
+Error `-1743` means Apple Events were not permitted; if it persists outside the sandbox, check Automation for the launching app and System Events. An explicit assistive-access denial points to Accessibility. Other errors retain their original diagnostics rather than receiving generic permission advice. Approving command execution in your AI host is separate from macOS consent. If approved execution is unavailable or fails again, run the CLI manually from Terminal to diagnose it; Terminal may need its own permissions.
+
+JSON failures keep `status: detection_error` and add `error_kind`, `recovery`, and (for AppleScript failures) `automation_error_code`. The plugin does not open a different computer-use channel to work around denied access.
+
 ## CLI
 
 From a cloned repository or extracted plugin ZIP:

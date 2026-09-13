@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -37,6 +38,39 @@ end run
 class DetectionError(Exception):
     pass
 
+class AutomationError(DetectionError):
+    """An osascript failure, kept separate from file/process errors."""
+
+
+def error_details(exc):
+    details = dict(error_kind='runtime_error', recovery='report_error',
+                   hint='Report the original error; it does not establish a permission denial.')
+    if not isinstance(exc, AutomationError):
+        return details
+    codes = re.findall(r'\((-?\d+)\)', str(exc))
+    code = int(codes[-1]) if codes else None
+    details['automation_error_code'] = code
+    if code == -10827:
+        details.update(error_kind='automation_unavailable', recovery='request_host_approved_retry',
+                       hint='System Events could not be reached. A command sandbox can cause this; '
+                       'this error does not prove macOS denied permission. If sandboxed, request one '
+                       'retry through the host approval mechanism outside its command sandbox. '
+                       'If unavailable or still failing, report the error and offer a Terminal diagnostic.')
+    elif code == -1743:
+        details.update(error_kind='automation_not_permitted', recovery='check_automation_access',
+                       hint='Apple Events were not permitted. If sandboxed, first request one host-approved '
+                       'retry outside the command sandbox. If it persists, check Privacy & Security → '
+                       'Automation for the launching app and System Events. This code alone does not '
+                       'distinguish host restrictions from macOS consent.')
+    elif code in (-1719, -25211) and ('assistive' in str(exc).lower() or code == -25211):
+        details.update(error_kind='accessibility_not_permitted', recovery='check_accessibility_access',
+                       hint='Accessibility access was refused. Check Privacy & Security → Accessibility '
+                       'for the launching app. Command execution approval and macOS consent are separate.')
+    else:
+        details.update(error_kind='automation_error')
+    return details
+
+
 def run(command):
     try:
         return subprocess.run(command, capture_output=True, timeout=10)
@@ -46,7 +80,7 @@ def run(command):
 def snapshot(app):
     result = run(['/usr/bin/osascript', '-e', SCRIPT, app])
     if result.returncode:
-        raise DetectionError(result.stderr.decode('utf-8', 'replace').strip())
+        raise AutomationError(result.stderr.decode('utf-8', 'replace').strip())
     raw = result.stdout.decode('utf-8').removesuffix('\n')
     if raw in ('not_running', 'no_window'):
         return {'status': raw}
@@ -141,7 +175,7 @@ def main(argv=None):
     except DetectionError as exc:
         result = dict(schema_version=1, app=args.app, match='not_found', path=None,
                       status='detection_error', error=str(exc), candidates=[],
-                      hint='Check System Settings → Privacy & Security → Accessibility and Automation for the app launching this command. Run again from Terminal if needed.')
+                      **error_details(exc))
     if args.json:
         print(json.dumps(result, ensure_ascii=False))
     elif result.get('path'):
