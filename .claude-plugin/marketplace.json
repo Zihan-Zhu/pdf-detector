@@ -4,12 +4,12 @@
     "name": "Zihan Zhu",
     "url": "https://github.com/Zihan-Zhu"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "plugins": [
     {
       "name": "pdf-detector",
       "source": "./plugins/pdf-detector",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "description": "Identify the local PDF selected in PDF Expert on macOS and give its path to your AI assistant."
     }
   ],

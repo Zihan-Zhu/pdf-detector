@@ -2,6 +2,14 @@
 
 Versions follow Semantic Versioning. Changes are recorded before tagging a release.
 
+## [0.1.2] - 2026-09-13
+
+### Fixed
+- Require direct reading of the detected local PDF in Codex and Claude Code.
+- Use computer use only when explicitly requested, never as an automatic reading fallback.
+- Explain unavailable or failed direct reading without guessing from window metadata.
+- Clarify that local PDF page rendering is distinct from screen capture.
+
 ## [0.1.1] - 2026-09-13
 
 ### Fixed

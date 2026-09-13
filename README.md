@@ -33,6 +33,12 @@ For local development, start `claude --plugin-dir ./plugins/pdf-detector` from a
 
 This release supports **Claude Code with local command/file access**. It is not a Claude web chat integration, and it does not provide a Claude Desktop MCP server. A `.skill` archive cannot access your Mac when executed in a remote sandbox.
 
+## Reading behavior
+
+After detection, the assistant reads the local PDF directly using its file/PDF tools. It must not launch computer use unless you explicitly request it. Asking to summarize the current paper does not authorize screenshots, clicks, scrolling, or desktop/browser automation. Directly extracting text or rendering pages from the local file is supported by this instruction; the detector itself still only returns metadata.
+
+If direct reading is unavailable, blocked, or fails, the assistant explains the limitation instead of switching to computer use or guessing from the title. Explicit computer-use requests remain subject to host permissions. This is a shared skill instruction for Codex and Claude Code, not a technical restriction on the host's tool availability.
+
 ## First use
 
 1. Keep the intended document selected in PDF Expert.
