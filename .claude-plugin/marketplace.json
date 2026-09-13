@@ -1,0 +1,17 @@
+{
+  "name": "pdf-detector",
+  "owner": {
+    "name": "Zihan Zhu",
+    "url": "https://github.com/Zihan-Zhu"
+  },
+  "version": "0.1.0",
+  "plugins": [
+    {
+      "name": "pdf-detector",
+      "source": "./plugins/pdf-detector",
+      "version": "0.1.0",
+      "description": "Identify the local PDF selected in PDF Expert on macOS and give its path to your AI assistant."
+    }
+  ],
+  "description": "Local PDF context for Codex and Claude Code on macOS."
+}

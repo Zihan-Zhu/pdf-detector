@@ -1,0 +1,20 @@
+{
+  "name": "pdf-detector",
+  "interface": {
+    "displayName": "Pdf Detector"
+  },
+  "plugins": [
+    {
+      "name": "pdf-detector",
+      "source": {
+        "source": "local",
+        "path": "./plugins/pdf-detector"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

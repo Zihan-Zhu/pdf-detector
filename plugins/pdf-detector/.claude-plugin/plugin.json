@@ -1,0 +1,18 @@
+{
+  "name": "pdf-detector",
+  "version": "0.1.0",
+  "description": "Identify the local PDF selected in PDF Expert on macOS and give its path to your AI assistant.",
+  "author": {
+    "name": "Zihan Zhu",
+    "url": "https://github.com/Zihan-Zhu"
+  },
+  "homepage": "https://github.com/Zihan-Zhu/pdf-detector",
+  "repository": "https://github.com/Zihan-Zhu/pdf-detector",
+  "license": "CC-BY-NC-4.0",
+  "keywords": [
+    "pdf",
+    "macos",
+    "pdf-expert",
+    "current-pdf"
+  ]
+}
